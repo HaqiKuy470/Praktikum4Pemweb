@@ -45,6 +45,18 @@
             </div>
         </a>
         <div class="navbar-action-group d-flex flex-row align-items-center flex-nowrap gap-2 ms-auto flex-shrink-0 order-lg-last">
+            @auth
+                <span class="text-white small d-none d-md-inline">
+                    <i class="bi bi-person-circle"></i>
+                    {{ auth()->user()->name }} ({{ auth()->user()->role }})
+                </span>
+                <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                    @csrf
+                    <button type="submit" class="btn btn-sm btn-outline-light">Logout</button>
+                </form>
+            @else
+                <a href="{{ route('login') }}" class="btn btn-sm btn-warning">Login</a>
+            @endauth
             <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasPubMain">
                 <span class="navbar-toggler-icon" style="filter:invert(1)"></span>
             </button>
@@ -148,7 +160,7 @@
                     <li class="mb-1"><a href="https://kemendesa.go.id" target="_blank"><i class="bi bi-box-arrow-up-right me-1"></i>Kemendesa</a></li>
                     <li class="mb-1"><a href="https://ciamis.go.id" target="_blank"><i class="bi bi-box-arrow-up-right me-1"></i>Kab. Ciamis</a></li>
                     <li class="mb-1"><a href="https://jabar.go.id" target="_blank"><i class="bi bi-box-arrow-up-right me-1"></i>Pemprov Jabar</a></li>
-                    <li class="mb-1"><a href="{{ route('berita.create') }}"><i class="bi bi-shield-lock me-1"></i>Panel Admin</a></li>
+                    <li class="mb-1"><a href="{{ route('login') }}"><i class="bi bi-shield-lock me-1"></i>Panel Admin</a></li>
                 </ul>
             </div>
             <div class="col-lg-3">

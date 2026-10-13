@@ -16,41 +16,44 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('berita.store') }}">
+    <form method="POST" action="{{ route('berita.store') }}" enctype="multipart/form-data">
         @csrf
         <div class="mb-3">
-            <label class="form-label">Judul</label>
-            <input type="text" name="judul" value="{{ old('judul') }}" class="form-control">
-        </div>
-        <div class="row">
-            <div class="col-md-4 mb-3">
-                <label class="form-label">Kategori</label>
-                <input type="text" name="kategori" value="{{ old('kategori') }}" class="form-control">
-            </div>
-            <div class="col-md-4 mb-3">
-                <label class="form-label">Tanggal</label>
-                <input type="date" name="tanggal" value="{{ old('tanggal') }}" class="form-control">
-            </div>
-            <div class="col-md-4 mb-3">
-                <label class="form-label">Penulis</label>
-                <input type="text" name="penulis" value="{{ old('penulis') }}" class="form-control">
-            </div>
+            <label for="judul" class="form-label fw-semibold">Judul</label>
+            <input type="text" name="judul" id="judul" value="{{ old('judul') }}" class="form-control">
+            @error('judul') <div class="text-danger small">{{ $message }}</div> @enderror
         </div>
         <div class="mb-3">
-            <label class="form-label">URL Gambar</label>
-            <input type="text" name="gambar" value="{{ old('gambar') }}" class="form-control">
+            <label for="kategori_id" class="form-label fw-semibold">Kategori</label>
+            <select name="kategori_id" id="kategori_id" class="form-select">
+                <option value="">-- Pilih Kategori --</option>
+                @foreach ($kategoris as $k)
+                    <option value="{{ $k->id }}" @selected(old('kategori_id') == $k->id)>{{ $k->nama }}</option>
+                @endforeach
+            </select>
+            @error('kategori_id') <div class="text-danger small">{{ $message }}</div> @enderror
         </div>
         <div class="mb-3">
-            <label class="form-label">Ringkasan</label>
-            <textarea name="ringkasan" rows="2" class="form-control">{{ old('ringkasan') }}</textarea>
+            <label class="form-label fw-semibold d-block">Tag</label>
+            @foreach ($tags as $tag)
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="tags[]"
+                           id="tag{{ $tag->id }}" value="{{ $tag->id }}"
+                           @checked(in_array($tag->id, old('tags', [])))>
+                    <label class="form-check-label" for="tag{{ $tag->id }}">#{{ $tag->nama }}</label>
+                </div>
+            @endforeach
         </div>
         <div class="mb-3">
-            <label class="form-label">Isi</label>
-            <textarea name="isi" rows="6" class="form-control">{{ old('isi') }}</textarea>
+            <label for="isi" class="form-label fw-semibold">Isi Berita</label>
+            <textarea name="isi" id="isi" rows="6" class="form-control">{{ old('isi') }}</textarea>
+            @error('isi') <div class="text-danger small">{{ $message }}</div> @enderror
         </div>
         <div class="mb-3">
-            <label class="form-label">Tag (pisahkan dengan koma)</label>
-            <input type="text" name="tag" value="{{ old('tag') }}" class="form-control">
+            <label for="gambar" class="form-label fw-semibold">Gambar (opsional)</label>
+            <input type="file" name="gambar" id="gambar" class="form-control" accept="image/*">
+            <small class="text-muted">Format JPG, PNG, atau WEBP. Maksimal 2 MB.</small>
+            @error('gambar') <div class="text-danger small">{{ $message }}</div> @enderror
         </div>
         <button type="submit" class="btn btn-primary">Simpan</button>
         <a href="{{ route('berita.index') }}" class="btn btn-outline-secondary">Batal</a>
